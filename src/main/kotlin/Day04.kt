@@ -1,23 +1,30 @@
+import shared.Aoc2021
+
 const val CARD_SIZE = 5
 
+fun main() {
+    Day04.solve(bothParts = true, checkPart1 = 4512, checkPart2 = 1924)
+}
+
+object Day04 : Aoc2021(production = true, debug = false) {
+    private val bingo = Bingo(inputReader().readLines())
+
+    override fun solvePart1(debug: Boolean) = bingo.solve()
+    override fun solvePart2(debug: Boolean) = bingo.solve(true)
+}
 
 class Bingo constructor(input: List<String>) {
     private val draws = input[0].split(',').map { it.toInt() }
-    var drownNumbersCount = 0
-    val drownNumbers get() = draws.take(drownNumbersCount)
-    var step = 0
+    private var drownNumbersCount = 0
+    private var step = 0
     private val cardsCount = (input.size - 1) / (CARD_SIZE + 1)
     private val cards = mutableListOf<Card>()
+    private val winOrder = mutableListOf<Card>()
 
-    //    private val winners get() = cards.filter { it.isWinning() }
-    val winOrder = mutableListOf<Card>()
+    val drownNumbers get() = draws.take(drownNumbersCount)
 
     init {
-        println("Reading $cardsCount cards...")
-        repeat(cardsCount) {
-            cards.add(Card(input, it))
-        }
-        println("Reading done...")
+        repeat(cardsCount) { cards.add(Card(input, it)) }
     }
 
     private fun step() {
@@ -52,10 +59,8 @@ class Bingo constructor(input: List<String>) {
 
     }
 
-
-    inner class Card constructor(input: List<String>, index: Int) {
+    inner class Card constructor(input: List<String>, val index: Int) {
         private val lines = mutableListOf<List<Int>>()
-        val index = index
         val numbers = mutableListOf<Int>()
         var winner = false
 
@@ -83,28 +88,4 @@ class Bingo constructor(input: List<String>) {
             false
         }
     }
-
-}
-
-
-fun main() {
-
-    fun part1(input: List<String>) = with(Bingo(input)) {
-        solve()
-    }
-
-
-    fun part2(input: List<String>) = with(Bingo(input)) {
-        solve(true)
-    }
-
-    // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day04_test")
-    check(part1(testInput) == 4512)
-    check(part2(testInput) == 1924)
-
-    val input = readInput("Day04")
-    println(part1(input))
-    println(part2(input))
-
 }

@@ -18,7 +18,7 @@ abstract class Aoc2021(val production: Boolean, private val debug:Boolean = true
         val part = if (finalPart) 2 else 1
         println("Running for part $part ($identifier)...")
         val result = if (finalPart) solvePart2(debug) else solvePart1(debug)
-        println("Running for part $part: $result")
+        println("Result for part $part: $result")
         if (checkResult != null) check(checkResult == result) { "Result for part $part should be $checkResult (it is $result)" }
     }
 
@@ -27,7 +27,7 @@ abstract class Aoc2021(val production: Boolean, private val debug:Boolean = true
             .inputStream()
             .reader()
 
-    fun debugToConsole(message: () -> Any, forceDebug:Boolean = false) {
+    fun debugToConsole(forceDebug:Boolean = false, message: () -> Any) {
         if (debug || forceDebug) println(message.invoke())
     }
 

@@ -1,6 +1,13 @@
-fun main() {
+import shared.Aoc2021
 
-    fun part1(input: List<String>) = input
+fun main() {
+    Day02.solve(bothParts = true, checkPart1 = 150, checkPart2 = 900)
+}
+
+object Day02 : Aoc2021(production = true, debug = false) {
+    private val data = inputReader().readLines()
+
+    override fun solvePart1(debug: Boolean) = data
         .map { it.substringBefore(' ') to it.substringAfter(' ').toInt() }
         .fold(0 to 0) { depthDistance, instruction ->
             when (instruction.first) {
@@ -11,7 +18,7 @@ fun main() {
             }
         }.let { it.first * it.second }
 
-    fun part2(input: List<String>) = input
+    override fun solvePart2(debug: Boolean) = data
         .map { it.substringBefore(' ') to it.substringAfter(' ').toInt() }
         .fold(Triple(0, 0, 0)) { aimDepthDistance, instruction ->
             when (instruction.first) {
@@ -31,16 +38,6 @@ fun main() {
                     aimDepthDistance.third
                 )
                 else -> throw IllegalArgumentException("Unknown instruction")
-            }.also { println(it) }
+            }.also { debugToConsole { it } }
         }.let { it.second * it.third }
-
-    // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day02_test")
-    check(part1(testInput) == 150)
-    check(part2(testInput) == 900)
-
-    val input = readInput("Day02")
-    println(part1(input))
-    println(part2(input))
-
 }
