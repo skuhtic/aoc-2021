@@ -1,3 +1,5 @@
+import shared.readInput
+
 const val EXPLOSION = 'X'
 const val EXPLODED = '+'
 const val FLASHING = '0'

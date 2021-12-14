@@ -1,3 +1,5 @@
+import shared.readInput
+
 data class PaperDot(val x: Int, val y: Int)
 data class PaperInstruction(val dir: Char, val pos: Int)
 
@@ -65,6 +67,7 @@ fun main() {
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day13_test")
+
     val testPart1 = part1(testInput)
     println("Test part 1: $testPart1")
     check(testPart1 == 17)
@@ -73,6 +76,7 @@ fun main() {
     println("Test part 2: $testPart2")
     check(testPart2 == 16)
 
+    // solution
     val input = readInput("Day13")
 //    println(part1(input))
     println(part2(input))

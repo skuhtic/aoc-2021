@@ -1,3 +1,5 @@
+import shared.readInput
+
 const val START = "start"
 const val END = "end"
 
