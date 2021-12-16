@@ -1,4 +1,5 @@
 import shared.Aoc2021
+import shared.Position
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -30,8 +31,6 @@ object Day05 : Aoc2021(production = true, debug = false) {
     override fun solvePart1(debug: Boolean) = cloudsHorizontalAndVertical.filterValues { it >= 2 }.count()
     override fun solvePart2(debug: Boolean) = cloudsAll.filterValues { it >= 2 }.count()
 }
-
-data class Position(val x: Int, val y: Int)
 
 data class Line(val start: Position, val end: Position) {
     val positions: Set<Position>

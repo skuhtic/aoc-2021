@@ -1,6 +1,7 @@
 package shared
 
 import java.io.File
+import kotlin.system.measureTimeMillis
 
 abstract class Aoc2021(val production: Boolean, private val debug:Boolean = true) {
 
@@ -15,11 +16,13 @@ abstract class Aoc2021(val production: Boolean, private val debug:Boolean = true
     }
 
     private fun solvePart(finalPart: Boolean, checkResult: Any?) {
-        val part = if (finalPart) 2 else 1
-        println("Running for part $part ($identifier)...")
-        val result = if (finalPart) solvePart2(debug) else solvePart1(debug)
-        println("Result for part $part: $result")
-        if (checkResult != null) check(checkResult == result) { "Result for part $part should be $checkResult (it is $result)" }
+        measureTimeMillis {
+            val part = if (finalPart) 2 else 1
+            println("Running for part $part ($identifier)...")
+            val result = if (finalPart) solvePart2(debug) else solvePart1(debug)
+            println("Result for part $part: $result")
+            if (checkResult != null) check(checkResult == result) { "Result for part $part should be $checkResult (it is $result)" }
+        }.let { println("Done in: ${it.toDouble() / 1000} seconds...") }
     }
 
     fun inputReader(suffix: String = "") =
