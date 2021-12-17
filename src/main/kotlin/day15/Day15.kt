@@ -3,10 +3,10 @@ package day15
 import shared.Aoc2021
 
 fun main() {
-    Day15.solve(bothParts = false, checkPart1 = 40, checkPart2 = 315)
+    Day15.solve(bothParts = true, checkPart1 = 40, checkPart2 = 315)
 }
 
-object Day15 : Aoc2021(production = false, debug = true) {
+object Day15 : Aoc2021(production = true, debug = false) {
 
     override fun solvePart1(debug: Boolean) = with(SquareBoard()) {
         solve()
@@ -41,17 +41,6 @@ object Day15 : Aoc2021(production = false, debug = true) {
             }
             boardSize = board.size
             check(board[0].size == boardSize)  // square
-            debugPrintBoard()
-        }
-
-        private fun debugPrintBoard() = debugToConsole {
-            board.toList().chunked(10).joinToString("\n\n", "\n", "\n") { vList ->
-                vList.joinToString("\n") { lines ->
-                    lines.toList().chunked(10).joinToString(" ") { hList ->
-                        hList.joinToString("") { it.toString() }
-                    }
-                }
-            }
         }
 
         data class Position(val x: Int, val y: Int) {
@@ -59,42 +48,32 @@ object Day15 : Aoc2021(production = false, debug = true) {
             private val toUp get() = Position(x, y - 1)
             private val toRight get() = Position(x + 1, y)
             private val toDown get() = Position(x, y + 1)
-            fun crossNeighbours(squareSize: Int) = crossNeighbours(squareSize, squareSize)
             private fun crossNeighbours(width: Int, height: Int) = listOf(toLeft, toRight, toUp, toDown).filter {
                 it.x in 0 until width && it.y in 0 until height
             }
+
+            fun crossNeighbours(squareSize: Int) = crossNeighbours(squareSize, squareSize)
         }
 
-        private val nextMap = sortedSetOf<Pair<Position, Int>>(compareBy { it.second })
+        private val nextMap = mutableSetOf<Pair<Position, Int>>()
         private val riskFromStart = mutableMapOf<Position, Int>()
         private val cameFrom = mutableMapOf<Position, Position>()
 
-        operator fun <T> Map<Position, T>.get(x: Int, y: Int) = this.get(Position(y, x))
-        operator fun <T> Array<Array<T>>.get(x: Int, y: Int) = this[y][x]
+        operator fun <T> Map<Position, T>.get(x: Int, y: Int) = this[Position(y, x)]
         operator fun <T> Array<Array<T>>.get(pos: Position) = this[pos.y][pos.x] ?: error("No position: $pos")
+        operator fun <T> Array<Array<T>>.get(x: Int, y: Int) = this[y][x]
 
-        private fun debugPrint(cur: Position? = null) = debugToConsole {
-            board.mapIndexed { y, line ->
-                line.mapIndexed { x, risk ->
-                    Position(x, y).let { pos ->
-                        val mark = if (pos == cur) "*" else if (nextMap.any { it.first == pos }) "-" else " "
-                        val rfs = (riskFromStart[pos]?.toString() ?: "--").padStart(2)
-                        val cf = (cameFrom[pos]?.let { "${it.x},${it.y}" } ?: "--").padStart(3)
-                        "$mark $risk $rfs $cf $mark"
-                    }
-                }.joinToString(" | ", "| ", " |")
-            }.joinToString("\n", "\n")
-        }
-
-        fun solve() {
+        fun solve(): Int {
             val start = Position(0, 0)
             val end = Position(boardSize - 1, boardSize - 1)
             nextMap.add(start to 0)
             riskFromStart[start] = 0
             cameFrom[start] = start
             while (true) {
-                val current = nextMap.pollFirst()?.first ?: break
-                debugPrint(current); readln()
+                val currentCandidate = nextMap.minByOrNull { it.second } ?: break
+                nextMap.remove(currentCandidate)
+                val current = currentCandidate.first
+                debugPrint(current)
                 if (current == end)
                     break
                 val currentRisk = riskFromStart[current] ?: error("No current risk")
@@ -107,19 +86,29 @@ object Day15 : Aoc2021(production = false, debug = true) {
                         if (nextRiskFromStart == null || newRisk < nextRiskFromStart) {
                             riskFromStart[next] = newRisk
                             cameFrom[next] = current
-                            nextMap.add(next to newRisk)
+                            check(nextMap.add(next to newRisk))
                             debugToConsole { " -> Next: $next " }
                         }
                     }
                 }
                 debugToConsole { "Candidates: " + nextMap.joinToString() }
             }
+            return riskFromStart[end] ?: error("No result")
+        }
 
-            println(
-                "Came from: " + cameFrom.filterKeys { it.x > 7 || it.y > 7 }.toList().joinToString("\n", "\n", "\n")
-            )
-            println("Risk: " + riskFromStart[end])
+        // Debug print functions
+        private fun debugPrint(cur: Position? = null) = debugToConsole {
+            board.mapIndexed { y, line ->
+                line.mapIndexed { x, risk ->
+                    Position(x, y).let { pos ->
+                        val mark = if (pos == cur) "*" else if (nextMap.any { it.first == pos }) "-" else " "
+                        val rfs = (riskFromStart[pos]?.toString() ?: "--").padStart(2)
+                        val cf = (cameFrom[pos]?.let { "${it.x},${it.y}" } ?: "--").padStart(3)
+                        "$mark $risk $rfs $cf $mark"
+                    }
+                }.joinToString(" | ", "| ", " |")
+            }.joinToString("\n", "\n")
         }
     }
-}
 
+}
