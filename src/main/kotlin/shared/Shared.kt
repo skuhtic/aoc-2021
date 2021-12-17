@@ -17,6 +17,9 @@ data class Position(val x: Int, val y: Int) {
     }
 
     val toLeft = if (x > 0) Position(x-1, y) else null
-
     val toUp = if (y > 0) Position(x, y-1) else null
+    val toRight = if (x < maxX) Position(x+1, y) else null
+    val toDown = if (y < maxY) Position(x, y+1) else null
+
+    val crossNeighbours = listOfNotNull(toLeft, toRight, toUp, toDown)
 }
