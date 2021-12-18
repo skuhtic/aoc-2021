@@ -1,4 +1,41 @@
+package day13
+
 import shared.readInput
+
+fun main() {
+
+    fun part1(input: List<String>) = with(PaperFolder(input)) {
+        processInstruction()
+        result
+    }
+
+    fun part2(input: List<String>) = with(PaperFolder(input)) {
+        @Suppress("ControlFlowWithEmptyBody")
+        while (processInstruction()) {
+//            println(this)
+        }
+        println(this)
+        result
+    }
+
+    // test if implementation meets criteria from the description, like:
+    val testInput = readInput("Day13_test")
+
+    val testPart1 = part1(testInput)
+    println("Test part 1: $testPart1")
+    check(testPart1 == 17)
+
+    val testPart2 = part2(testInput)
+    println("Test part 2: $testPart2")
+    check(testPart2 == 16)
+
+    // solution
+    val input = readInput("Day13")
+//    println(part1(input))
+    println(part2(input))
+
+    // JGAJEFKU
+}
 
 data class PaperDot(val x: Int, val y: Int)
 data class PaperInstruction(val dir: Char, val pos: Int)
@@ -49,37 +86,3 @@ class PaperFolder(input: List<String>) {
 
 }
 
-fun main() {
-
-    fun part1(input: List<String>) = with(PaperFolder(input)) {
-        processInstruction()
-        result
-    }
-
-    fun part2(input: List<String>) = with(PaperFolder(input)) {
-        @Suppress("ControlFlowWithEmptyBody")
-        while (processInstruction()) {
-//            println(this)
-        }
-            println(this)
-        result
-    }
-
-    // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day13_test")
-
-    val testPart1 = part1(testInput)
-    println("Test part 1: $testPart1")
-    check(testPart1 == 17)
-
-    val testPart2 = part2(testInput)
-    println("Test part 2: $testPart2")
-    check(testPart2 == 16)
-
-    // solution
-    val input = readInput("Day13")
-//    println(part1(input))
-    println(part2(input))
-
-    // JGAJEFKU
-}

@@ -1,39 +1,72 @@
 package shared
 
 import java.io.File
+import java.io.InputStreamReader
 import kotlin.system.measureTimeMillis
 
-abstract class Aoc2021(val production: Boolean, private val debug:Boolean = true) {
+abstract class Aoc2021(val debug: Boolean = true) {
 
-    abstract fun solvePart1(debug: Boolean): Any
-    abstract fun solvePart2(debug: Boolean): Any
+    abstract fun solutionPart1(inputReader: InputStreamReader): Any
+    abstract fun solutionPart2(inputReader: InputStreamReader): Any
 
     private val identifier: String by lazy { getClassName() }
 
-    fun solve(bothParts: Boolean, checkPart1: Any? = null, checkPart2: Any? = null) {
-        solvePart(false, if (production) null else checkPart1)
-        if (bothParts) solvePart(true, if (production) null else checkPart2)
-    }
+    fun testPart1(checkResult: Any? = null, inputFileNameSuffix: String = "") = runPart(
+        finalPart = false,
+        production = false,
+        checkResult = checkResult,
+        suffix = inputFileNameSuffix
+    )
 
-    private fun solvePart(finalPart: Boolean, checkResult: Any?) {
+    fun testPart2(checkResult: Any? = null, inputFileNameSuffix: String = "") = runPart(
+        finalPart = true,
+        production = false,
+        checkResult = checkResult,
+        suffix = inputFileNameSuffix
+    )
+
+    fun runPart1(checkResult: Any? = null) = runPart(
+        finalPart = false,
+        production = true,
+        checkResult = checkResult,
+        suffix = ""
+    )
+
+    fun runPart2(checkResult: Any? = null) = runPart(
+        finalPart = true,
+        production = true,
+        checkResult = checkResult,
+        suffix = ""
+    )
+
+    private fun runPart(
+        finalPart: Boolean,
+        production: Boolean,
+        checkResult: Any?,
+        suffix: String
+    ) {
         measureTimeMillis {
-            val part = if (finalPart) 2 else 1
-            println("Running for part $part ($identifier)...")
-            val result = if (finalPart) solvePart2(debug) else solvePart1(debug)
-            println("Result for part $part: $result")
-            if (checkResult != null) check(checkResult == result) { "Result for part $part should be $checkResult (it is $result)" }
-        }.let { println("Done in: ${it.toDouble() / 1000} seconds...") }
+            val partNo = if (finalPart) 2 else 1
+            val runOrTest = if (production) "Running" else "Testing"
+            val inputFileName = inputFileName(production, suffix)
+            println("\n$runOrTest $identifier part $partNo using $inputFileName ...")
+            val inputReader = inputReader(inputFileName)
+            val result = if (finalPart) solutionPart2(inputReader) else solutionPart1(inputReader)
+            val status =
+                if (checkResult != null) if (checkResult == result) "(ok)" else "(should be $checkResult)" else ""
+            println("$identifier part $partNo result: $result $status")
+            if (checkResult != null) check(checkResult == result)
+        }.let { println("Done in: ${it.toDouble() / 1000} seconds...\n") }
     }
 
-    fun inputReader(suffix: String = "") =
-        File("inputs", "$identifier${if (production) "" else "_test"}$suffix.txt")
-            .inputStream()
-            .reader()
+    private fun inputFileName(production: Boolean, suffix: String) =
+        "$identifier${if (production) "" else "_test"}${if (suffix.isNotBlank()) "_$suffix" else ""}.txt"
 
-    fun debugToConsole(forceDebug:Boolean = false, message: () -> Any) {
+    private fun inputReader(fileName: String) = File("inputs", fileName).inputStream().reader()
+
+    fun debugToConsole(forceDebug: Boolean = false, message: () -> Any) {
         if (debug || forceDebug) println(message.invoke())
     }
 
     private fun getClassName(): String = this::class.simpleName.toString()
-
 }

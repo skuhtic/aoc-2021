@@ -1,4 +1,40 @@
+package day11
+
 import shared.readInput
+
+fun main() {
+
+    fun part1(input: List<String>): Int {
+        val board = Board(input)
+//        board.printToConsole()
+        repeat(100) {
+            board.step()
+//            board.printToConsole()
+        }
+        return board.explosions
+    }
+
+    fun part2(input: List<String>): Int {
+        val board = Board(input)
+//        board.printToConsole()
+        do {
+            board.step()
+//            board.printToConsole()
+        } while (!board.isAllFlashing())
+        return board.step
+    }
+
+    // test if implementation meets criteria from the description, like:
+    val testInput = readInput("Day11_test")
+    check(part1(testInput) == 1656)
+    check(part2(testInput) == 195)
+
+    val input = readInput("Day11")
+    println(part1(input))
+    println(part2(input))
+
+}
+
 
 const val EXPLOSION = 'X'
 const val EXPLODED = '+'
@@ -83,35 +119,3 @@ private fun Char.levelUp(): Char = when (this) {
 }
 
 
-fun main() {
-
-    fun part1(input: List<String>): Int {
-        val board = Board(input)
-        board.printToConsole()
-        repeat(100) {
-            board.step()
-            board.printToConsole()
-        }
-        return board.explosions
-    }
-
-    fun part2(input: List<String>): Int {
-        val board = Board(input)
-        board.printToConsole()
-        do {
-            board.step()
-            board.printToConsole()
-        } while (!board.isAllFlashing())
-        return board.step
-    }
-
-    // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day11_test")
-    check(part1(testInput) == 1656)
-    check(part2(testInput) == 195)
-
-    val input = readInput("Day11")
-    println(part1(input))
-    println(part2(input))
-
-}

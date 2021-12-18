@@ -1,27 +1,31 @@
 package day15
 
 import shared.Aoc2021
+import java.io.InputStreamReader
 
-fun main() {
-    Day15.solve(bothParts = true, checkPart1 = 40, checkPart2 = 315)
+fun main() = with(Day15) {
+    testPart1(checkResult = 40)
+    testPart2(checkResult = 315)
+    runPart1()
+    runPart2()
 }
 
-object Day15 : Aoc2021(production = true, debug = false) {
+object Day15 : Aoc2021(debug = false) {
 
-    override fun solvePart1(debug: Boolean) = with(SquareBoard()) {
+    override fun solutionPart1(inputReader: InputStreamReader): Any = with(SquareBoard(inputReader)) {
         solve()
     }
 
-    override fun solvePart2(debug: Boolean) = with(SquareBoard(true)) {
+    override fun solutionPart2(inputReader: InputStreamReader): Any = with(SquareBoard(inputReader, true)) {
         solve()
     }
 
-    class SquareBoard(isPart2: Boolean = false) {
+    class SquareBoard(inputReader: InputStreamReader, isPart2: Boolean = false) {
         private val board: Array<Array<Int>>
         private val boardSize: Int
 
         init {
-            val initBoard = inputReader().readLines().map { line ->
+            val initBoard = inputReader.readLines().map { line ->
                 line.map { char -> char.digitToInt() }.toTypedArray()
             }.toTypedArray()
             board = if (!isPart2) {

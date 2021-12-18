@@ -1,13 +1,19 @@
-import shared.Aoc2021
+package day03
 
-fun main() {
-    Day03.solve(bothParts = true, checkPart1 = 198, checkPart2 = 230)
+import shared.Aoc2021
+import java.io.InputStreamReader
+
+fun main() = with(Day03) {
+    testPart1(checkResult = 198)
+    testPart2(checkResult = 230)
+    runPart1()
+    runPart2()
 }
 
-object Day03 : Aoc2021(production = true, debug = false) {
-    private val chars = inputReader().readLines().map { it.toCharArray() }
+object Day03 : Aoc2021() {
 
-    override fun solvePart1(debug: Boolean): Int {
+    override fun solutionPart1(inputReader: InputStreamReader): Any {
+        val chars = inputReader.readLines().map { it.toCharArray() }
         var gamma = 0
         var epsilon = 0
         val half = chars.size / 2
@@ -19,7 +25,8 @@ object Day03 : Aoc2021(production = true, debug = false) {
         return gamma * epsilon
     }
 
-    override fun solvePart2(debug: Boolean): Int {
+    override fun solutionPart2(inputReader: InputStreamReader): Any {
+        val chars = inputReader.readLines().map { it.toCharArray() }
         var oxygenList = chars //input.map { it.toCharArray() }
         repeat(oxygenList[0].size) { index ->
             oxygenList = oxygenList.filterOxygen(index)
@@ -39,13 +46,13 @@ object Day03 : Aoc2021(production = true, debug = false) {
 }
 
 fun List<CharArray>.filterOxygen(index: Int) = if (this.size == 1) this else
-partition { it[index] == '1' }.let {
-    when {
-        it.first.size > it.second.size -> it.first
-        it.first.size < it.second.size -> it.second
-        else -> it.first
+    partition { it[index] == '1' }.let {
+        when {
+            it.first.size > it.second.size -> it.first
+            it.first.size < it.second.size -> it.second
+            else -> it.first
+        }
     }
-}
 
 fun List<CharArray>.filterCO2(index: Int) = if (this.size == 1) this else
     partition { it[index] == '0' }.let {

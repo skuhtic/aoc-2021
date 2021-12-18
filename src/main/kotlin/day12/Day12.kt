@@ -1,4 +1,35 @@
+package day12
+
 import shared.readInput
+
+fun main() {
+
+    fun part1(input: List<String>): Int {
+        return Maze(input).solve()
+    }
+
+    fun part2(input: List<String>): Int {
+        return Maze(input).solve(1)
+    }
+
+    // test if implementation meets criteria from the description, like:
+    val testInputSmall = readInput("Day12_test_s")
+    check(part1(testInputSmall) == 10)
+    check(part2(testInputSmall) == 36)
+
+    val testInputMedium = readInput("Day12_test_m")
+    check(part1(testInputMedium) == 19)
+    check(part2(testInputMedium) == 103)
+
+    val testInputBig = readInput("Day12_test_b")
+    check(part1(testInputBig) == 226)
+    check(part2(testInputBig) == 3509)
+
+    val input = readInput("Day12")
+    println(part1(input))
+    println(part2(input))
+
+}
 
 const val START = "start"
 const val END = "end"
@@ -103,31 +134,3 @@ class Maze(inputData: List<String>) {
 }
 
 
-fun main() {
-
-    fun part1(input: List<String>): Int {
-        return Maze(input).solve()
-    }
-
-    fun part2(input: List<String>): Int {
-        return Maze(input).solve(1)
-    }
-
-    // test if implementation meets criteria from the description, like:
-    val testInputSmall = readInput("Day12_test_s")
-    check(part1(testInputSmall) == 10)
-    check(part2(testInputSmall) == 36)
-
-    val testInputMedium = readInput("Day12_test_m")
-    check(part1(testInputMedium) == 19)
-    check(part2(testInputMedium) == 103)
-
-    val testInputBig = readInput("Day12_test_b")
-    check(part1(testInputBig) == 226)
-    check(part2(testInputBig) == 3509)
-
-    val input = readInput("Day12")
-    println(part1(input))
-    println(part2(input))
-
-}

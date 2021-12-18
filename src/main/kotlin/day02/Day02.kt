@@ -1,13 +1,18 @@
-import shared.Aoc2021
+package day02
 
-fun main() {
-    Day02.solve(bothParts = true, checkPart1 = 150, checkPart2 = 900)
+import shared.Aoc2021
+import java.io.InputStreamReader
+
+fun main() = with(Day02) {
+    testPart1(checkResult = 150)
+    testPart2(checkResult = 900)
+    runPart1()
+    runPart2()
 }
 
-object Day02 : Aoc2021(production = true, debug = false) {
-    private val data = inputReader().readLines()
+object Day02 : Aoc2021(debug = false) {
 
-    override fun solvePart1(debug: Boolean) = data
+    override fun solutionPart1(inputReader: InputStreamReader): Any = inputReader.readLines()
         .map { it.substringBefore(' ') to it.substringAfter(' ').toInt() }
         .fold(0 to 0) { depthDistance, instruction ->
             when (instruction.first) {
@@ -18,7 +23,7 @@ object Day02 : Aoc2021(production = true, debug = false) {
             }
         }.let { it.first * it.second }
 
-    override fun solvePart2(debug: Boolean) = data
+    override fun solutionPart2(inputReader: InputStreamReader): Any = inputReader.readLines()
         .map { it.substringBefore(' ') to it.substringAfter(' ').toInt() }
         .fold(Triple(0, 0, 0)) { aimDepthDistance, instruction ->
             when (instruction.first) {
@@ -40,4 +45,5 @@ object Day02 : Aoc2021(production = true, debug = false) {
                 else -> throw IllegalArgumentException("Unknown instruction")
             }.also { debugToConsole { it } }
         }.let { it.second * it.third }
+
 }

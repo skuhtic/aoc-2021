@@ -1,35 +1,44 @@
+package day05
+
 import shared.Aoc2021
 import shared.Position
+import java.io.InputStreamReader
 import kotlin.math.abs
 import kotlin.math.max
 
-fun main() {
-    Day05.solve(bothParts = true, checkPart1 = 5, checkPart2 = 12)
+fun main() = with(Day05) {
+    testPart1(checkResult = 5)
+    testPart2(checkResult = 12)
+    runPart1()
+    runPart2()
 }
 
-object Day05 : Aoc2021(production = true, debug = false) {
-    private val cloudsHorizontalAndVertical = mutableMapOf<Position, Int>()
-    private val cloudsAll = mutableMapOf<Position, Int>()
+object Day05 : Aoc2021() {
 
-    init {
-        inputReader().readLines().forEach { input ->
+    private fun initClouds(inputReader: InputStreamReader, alsoUseDiagonal:Boolean = false): MutableMap<Position, Int> {
+        val clouds = mutableMapOf<Position, Int>()
+        inputReader.readLines().forEach { input ->
             Line.parse(input).let { line ->
-                line.positions.forEach { pos ->
-                    cloudsAll.getOrPut(pos) { 0 }.let { old ->
-                        cloudsAll.replace(pos, old, old + 1)
-                    }
-                    if (line.isHorizontalOrVertical) {
-                        cloudsHorizontalAndVertical.getOrPut(pos) { 0 }.let { old ->
-                            cloudsHorizontalAndVertical.replace(pos, old, old + 1)
+                if (alsoUseDiagonal || line.isHorizontalOrVertical) {
+                    line.positions.forEach { pos ->
+                        clouds.getOrPut(pos) { 0 }.let { old ->
+                            clouds.replace(pos, old, old + 1)
                         }
                     }
                 }
             }
         }
+        return clouds
     }
 
-    override fun solvePart1(debug: Boolean) = cloudsHorizontalAndVertical.filterValues { it >= 2 }.count()
-    override fun solvePart2(debug: Boolean) = cloudsAll.filterValues { it >= 2 }.count()
+    override fun solutionPart1(inputReader: InputStreamReader): Any {
+        val clouds = initClouds(inputReader)
+        return clouds.filterValues { it >= 2 }.count()
+    }
+    override fun solutionPart2(inputReader: InputStreamReader): Any {
+        val clouds = initClouds(inputReader, true)
+        return clouds.filterValues { it >= 2 }.count()
+    }
 }
 
 data class Line(val start: Position, val end: Position) {
