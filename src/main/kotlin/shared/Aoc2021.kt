@@ -4,7 +4,7 @@ import java.io.File
 import java.io.InputStreamReader
 import kotlin.system.measureTimeMillis
 
-abstract class Aoc2021(val debug: Boolean = true) {
+abstract class Aoc2021(private val debug: Boolean = true) {
 
     abstract fun solutionPart1(inputReader: InputStreamReader): Any
     abstract fun solutionPart2(inputReader: InputStreamReader): Any
