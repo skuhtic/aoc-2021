@@ -64,7 +64,8 @@ data class Line(val start: Position, val end: Position) {
 
     companion object {
         fun parse(line: String) = line.split(" -> ").let { positions ->
-            positions[0].split(',').let { Position(it[0].toInt(), it[1].toInt()) } to
+            positions[0].split(',').let{
+                Position(it[0].toInt(), it[1].toInt()) } to
                     positions[1].split(',').let { Position(it[0].toInt(), it[1].toInt()) }
         }.let { (s, e) -> Line(s, e) }
     }
