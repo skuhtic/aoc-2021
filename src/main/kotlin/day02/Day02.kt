@@ -43,7 +43,7 @@ object Day02 : Aoc2021(debug = false) {
                     aimDepthDistance.third
                 )
                 else -> throw IllegalArgumentException("Unknown instruction")
-            }.also { debugToConsole { it } }
+            }.also { debug { it } }
         }.let { it.second * it.third }
 
 }

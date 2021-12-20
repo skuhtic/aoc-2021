@@ -53,8 +53,8 @@ object Day04 : Aoc2021(debug = false) {
             } else {
                 winOrder.first()
             }.let { cardScored ->
-                debugToConsole {  "Step: $step, drown: $drownNumbersCount" + drownNumbers.joinToString(", ", " (", ")")}
-                debugToConsole {"Order: " + winOrder.joinToString(", ") { it.index.toString() }}
+                debug {  "Step: $step, drown: $drownNumbersCount" + drownNumbers.joinToString(", ", " (", ")")}
+                debug {"Order: " + winOrder.joinToString(", ") { it.index.toString() }}
                 val unmarkedNumbers = cardScored.numbers.filterNot { drownNumbers.contains(it) }
                 val unmarkedSum = unmarkedNumbers.sum()
                 val lastDrownNumber = drownNumbers.last()
@@ -81,7 +81,7 @@ object Day04 : Aoc2021(debug = false) {
                     lines.add(listOf(lines[0][it], lines[1][it], lines[2][it], lines[3][it], lines[4][it]))
                 }
                 check(lines.size == 10)
-                debugToConsole{"Card:" + lines.joinToString("\n", "\n", "\n")}
+                debug{"Card:" + lines.joinToString("\n", "\n", "\n")}
             }
 
             fun isWinning() = drownNumbers.let { drown ->

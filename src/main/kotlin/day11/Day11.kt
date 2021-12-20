@@ -1,52 +1,37 @@
 package day11
 
-import shared.readInput
+import shared.Aoc2021
+import java.io.InputStreamReader
 
-fun main() {
+fun main() = with(Day11) {
+    testPart1(checkResult = 1656)
+    testPart2(checkResult = 195)
+    runPart1()
+    runPart2()
+}
 
-    fun part1(input: List<String>): Int {
-        val board = Board(input)
-//        board.printToConsole()
-        repeat(100) {
-            board.step()
-//            board.printToConsole()
-        }
-        return board.explosions
+object Day11 : Aoc2021() {
+    private fun inputData(inputReader: InputStreamReader) = inputReader.readLines()
+    override fun solutionPart1(inputReader: InputStreamReader) = inputData(inputReader).let {
+        Board(it).run { solve(false) }
     }
 
-    fun part2(input: List<String>): Int {
-        val board = Board(input)
-//        board.printToConsole()
-        do {
-            board.step()
-//            board.printToConsole()
-        } while (!board.isAllFlashing())
-        return board.step
+    override fun solutionPart2(inputReader: InputStreamReader) = inputData(inputReader).let {
+        Board(it).run { solve(true) }
     }
-
-    // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day11_test")
-    check(part1(testInput) == 1656)
-    check(part2(testInput) == 195)
-
-    val input = readInput("Day11")
-    println(part1(input))
-    println(part2(input))
-
 }
 
 
-const val EXPLOSION = 'X'
-const val EXPLODED = '+'
-const val FLASHING = '0'
-
 class Board private constructor(private val data: CharArray, private val columns: Int, private val rows: Int) {
+    companion object {
+        const val EXPLOSION = 'X'
+        const val EXPLODED = '+'
+        const val FLASHING = '0'
+    }
 
-    private var _step = 0
-    val step: Int get() = _step
-
-    private var _explosions = 0
-    val explosions: Int get() = _explosions
+    private var step = 0
+    private var explosions = 0
+    private val isAllFlashing get() = data.all { it == FLASHING }
 
     constructor(input: List<String>) : this(
         input.joinToString("").toCharArray(),
@@ -58,7 +43,7 @@ class Board private constructor(private val data: CharArray, private val columns
 
     private fun explode(index: Int) {
         check(data[index] == EXPLOSION)
-        _explosions++
+        explosions++
         data[index] = EXPLODED
         neighbours(index).forEach {
             data[it] = data[it].levelUp()
@@ -66,14 +51,25 @@ class Board private constructor(private val data: CharArray, private val columns
         }
     }
 
-    fun step() {
+    private fun step() {
         data.indices.forEach { i ->
             data[i] = data[i].levelUp()
             if (data[i] == EXPLOSION) explode(i)
         }
         data.indices.forEach { i -> if (data[i] == EXPLODED) data[i] = FLASHING }
-        _step++
+        step++
     }
+
+    fun solve(finalPart: Boolean) =
+        if (!finalPart) {
+            repeat(100) { step() }
+            explosions
+        } else {
+            do {
+                step()
+            } while (!isAllFlashing)
+            step
+        }
 
     private fun neighbours(index: Int): List<Int> {
         val ret = mutableListOf<Int>()
@@ -94,28 +90,23 @@ class Board private constructor(private val data: CharArray, private val columns
         return ret
     }
 
-    fun isAllFlashing() = data.all { it == FLASHING }
+    private fun Char.levelUp(): Char = when (this) {
+        '0' -> '1'
+        '1' -> '2'
+        '2' -> '3'
+        '3' -> '4'
+        '4' -> '5'
+        '5' -> '6'
+        '6' -> '7'
+        '7' -> '8'
+        '8' -> '9'
+        '9' -> EXPLOSION
+        else -> this
+    }
 
-    fun printToConsole() = println(this)
-
+    // Debug functions
     override fun toString() = data.let {
-        "Board after step $step ($_explosions explosions)" +
+        "Board after step $step ($explosions explosions)" +
                 it.joinToString("").chunked(columns).joinToString("\n", "\n", "\n")
     }
 }
-
-private fun Char.levelUp(): Char = when (this) {
-    '0' -> '1'
-    '1' -> '2'
-    '2' -> '3'
-    '3' -> '4'
-    '4' -> '5'
-    '5' -> '6'
-    '6' -> '7'
-    '7' -> '8'
-    '8' -> '9'
-    '9' -> EXPLOSION
-    else -> this
-}
-
-

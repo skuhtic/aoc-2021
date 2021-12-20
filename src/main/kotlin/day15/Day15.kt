@@ -1,13 +1,14 @@
 package day15
 
 import shared.Aoc2021
+import shared.Position
 import java.io.InputStreamReader
 
 fun main() = with(Day15) {
     testPart1(checkResult = 40)
     testPart2(checkResult = 315)
-    runPart1()
-    runPart2()
+//    runPart1()
+//    runPart2()
 }
 
 object Day15 : Aoc2021(debug = false) {
@@ -47,17 +48,17 @@ object Day15 : Aoc2021(debug = false) {
             check(board[0].size == boardSize)  // square
         }
 
-        data class Position(val x: Int, val y: Int) {
-            private val toLeft get() = Position(x - 1, y)
-            private val toUp get() = Position(x, y - 1)
-            private val toRight get() = Position(x + 1, y)
-            private val toDown get() = Position(x, y + 1)
-            private fun crossNeighbours(width: Int, height: Int) = listOf(toLeft, toRight, toUp, toDown).filter {
-                it.x in 0 until width && it.y in 0 until height
-            }
-
-            fun crossNeighbours(squareSize: Int) = crossNeighbours(squareSize, squareSize)
-        }
+//        data class Position(val x: Int, val y: Int) {
+//            private val toLeft get() = Position(x - 1, y)
+//            private val toUp get() = Position(x, y - 1)
+//            private val toRight get() = Position(x + 1, y)
+//            private val toDown get() = Position(x, y + 1)
+//            private fun crossNeighbours(width: Int, height: Int) = listOf(toLeft, toRight, toUp, toDown).filter {
+//                it.x in 0 until width && it.y in 0 until height
+//            }
+//
+//            fun crossNeighbours(squareSize: Int) = crossNeighbours(squareSize, squareSize)
+//        }
 
         private val nextMap = mutableSetOf<Pair<Position, Int>>()
         private val riskFromStart = mutableMapOf<Position, Int>()
@@ -82,7 +83,7 @@ object Day15 : Aoc2021(debug = false) {
                     break
                 val currentRisk = riskFromStart[current] ?: error("No current risk")
                 val candidates = current.crossNeighbours(boardSize)
-                debugToConsole { "Current: $current (${candidates.joinToString()})" }
+                debug { "Current: $current (${candidates.joinToString()})" }
                 candidates.forEach { next ->
                     val nextRisk = board[next]
                     val newRisk = currentRisk + nextRisk
@@ -91,17 +92,17 @@ object Day15 : Aoc2021(debug = false) {
                             riskFromStart[next] = newRisk
                             cameFrom[next] = current
                             check(nextMap.add(next to newRisk))
-                            debugToConsole { " -> Next: $next " }
+                            debug { " -> Next: $next " }
                         }
                     }
                 }
-                debugToConsole { "Candidates: " + nextMap.joinToString() }
+                debug { "Candidates: " + nextMap.joinToString() }
             }
             return riskFromStart[end] ?: error("No result")
         }
 
         // Debug print functions
-        private fun debugPrint(cur: Position? = null) = debugToConsole {
+        private fun debugPrint(cur: Position? = null) = debug {
             board.mapIndexed { y, line ->
                 line.mapIndexed { x, risk ->
                     Position(x, y).let { pos ->

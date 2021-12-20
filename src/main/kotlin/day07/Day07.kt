@@ -16,18 +16,17 @@ object Day07 : Aoc2021() {
     private fun initData(inputReader: InputStreamReader) =
         inputReader.buffered().readLine().split(',').map { it.toInt() }
 
-    override fun solutionPart1(inputReader: InputStreamReader) =
-        TheTreacheryOfWhales(initData(inputReader)).apply {
-            solve()
-        }.minFuelCost
+    override fun solutionPart1(inputReader: InputStreamReader) = initData(inputReader).let { data ->
+        TheTreacheryOfWhales(data).apply { solve() }.minFuelCost
+    }
 
-    override fun solutionPart2(inputReader: InputStreamReader) =
-        TheTreacheryOfWhales(initData(inputReader), true).apply {
-            solve()
-        }.minFuelCost
+    override fun solutionPart2(inputReader: InputStreamReader) = initData(inputReader).let { data ->
+        TheTreacheryOfWhales(data, true).apply { solve() }.minFuelCost
+    }
 
     class TheTreacheryOfWhales(private val crabs: List<Int>, private val nonLinearFuelCost: Boolean = false) {
         private val tries = mutableMapOf<Int, Int>()
+
         private val nextTryPosition
             get() = tries.nextPosition {
                 if (nonLinearFuelCost) crabs.average().toInt() else crabs.sorted()[crabs.size / 2]
@@ -45,9 +44,9 @@ object Day07 : Aoc2021() {
                 val next = nextTryPosition ?: break
                 val res = crabs.tryPosition(next)
                 tries[next] = res
-                debugToConsole { "Trying @ $next: $res" }
+                debug { "Trying @ $next: $res" }
             }
-            debugToConsole { "Solution found" }
+            debug { "Solution found" }
         }
 
         private fun List<Int>.tryPosition(pos: Int): Int = sumOf { travelCosts[abs(it - pos)] }

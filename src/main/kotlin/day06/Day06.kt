@@ -14,7 +14,9 @@ object Day06 : Aoc2021(debug = false) {
 
     private fun initData(inputReader: InputStreamReader) = inputReader
         .readLines()[0].split(',').map { it.toInt() }.let { input ->
-        (0..8).map { it }.associateWith { i -> input.count { it == i }.toLong() }
+        (0..8).map { it }.associateWith { i ->
+            input.count { it == i }.toLong()
+        }
     }
 
     override fun solutionPart1(inputReader: InputStreamReader) = LanternFish(initData(inputReader)).apply {
@@ -44,7 +46,7 @@ object Day06 : Aoc2021(debug = false) {
         }
 
         fun solve(days: Int) = repeat(days) {
-            debugToConsole { "Day: ${it + 1} ($count)" }
+            debug { "Day: ${it + 1} ($count)" }
             day()
         }
     }

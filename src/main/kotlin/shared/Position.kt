@@ -10,5 +10,6 @@ data class Position(val x: Int, val y: Int) {
     }
 
     fun crossNeighbours(squareSize: Int) = crossNeighbours(squareSize, squareSize)
+
 }
 

@@ -1,0 +1,51 @@
+SINGLE OUTER PACKET + packets
+...
+example Type 4 - Literal
+D2FE28
+->
+110100101111111000101000
+VVVTTTxAAAAxBBBBxCCCC---
+->
+Version=6
+Type=4 (Literal)
+x -> 1 - not last
+A=bits of number
+x -> 1 - not last
+B=bits of number
+x ->  - THESE ARE LAST BITS
+C=bits of number
+--- -> filler to end (not used)
+
+A B C = 011111100101 -> 2021
+
+
+
+Type != 4 -> Operators
+
+Two modes:
+1. length type ID == 0 -> next 15 bits total = length in bits of sub-packets
+2. length type ID == 1 -> next 11 bits total = number of sub-packets
+
+38006F45291200
+->
+00111000000000000110111101000101001010010001001000000000
+VVVTTTILLLLLLLLLLLLLLLAAAAAAAAAAABBBBBBBBBBBBBBBB-------
+Version=1
+Type=6 (Operator)
+I==0 -> length in bits
+Length=27
+A -> first sub-packet
+B -> second (last) sub-packet
+--- length(a) + length(B) == 27
+
+EE00D40C823060
+->
+11101110000000001101010000001100100000100011000001100000
+VVVTTTILLLLLLLLLLLAAAAAAAAAAABBBBBBBBBBBCCCCCCCCCCC-----
+Version=7
+Type=3 (Operator)
+I==1 -> length in number of sub-packets
+Length=3
+A -> first sub-packet
+B -> second sub-packet
+C -> third (last) sub-packet
